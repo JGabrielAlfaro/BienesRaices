@@ -6,15 +6,21 @@ block contenido
             span.font-normal Raices
         h2.text-center.text-2xl.font-extrabold=pagina
 
+        if errores 
+            div(class="max-w-md mx-auto my-10")
+                each error in errores
+                    p.bg-red-600.text-white.uppercase.text-xs.text-center.p-2.mb-1.font-bold= error.msg
+
         .mt-8.mx-auto.max-w-md
             .bg-white.py-8.px-4.shadow
-                form.space-y-5
+                form.space-y-5(method="POST" action="/auth/registro" novalidate)
+                    input(type="hidden" name="_csrf" value=csrfToken)
                     div
                         label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="nombre") Tu nombre
-                        input#nombre.w-full.px-3.py-2.border.border-gray-300.rounder-md.placeholder-gray-400(placeholder="Tu nombre" type="text" name="nombre" autocomplete="on")
+                        input#nombre.w-full.px-3.py-2.border.border-gray-300.rounder-md.placeholder-gray-400(placeholder="Tu nombre" type="text" name="nombre" autocomplete="on" value=usuario ? usuario.nombre : '')
                     div
                         label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="email") Tu email
-                        input#email.w-full.px-3.py-2.border.border-gray-300.rounder-md.placeholder-gray-400(placeholder="Tu email" type="email" name="email" autocomplete="on")
+                        input#email.w-full.px-3.py-2.border.border-gray-300.rounder-md.placeholder-gray-400(placeholder="Tu email" type="email" name="email" autocomplete="on" value=usuario ? usuario.email : '')
                     div
                         label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="password") Password
                         input#password.w-full.px-3.py-2.border.border-gray-300.rounder-md.placeholder-gray-400(placeholder="Tu password" type="password" name="password" autocomplete="on")
