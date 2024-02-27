@@ -1,8 +1,9 @@
 
 import {check,validationResult} from "express-validator";
+import bcrypt from 'bcrypt';
 import Usuario from "../models/Usuario.js";
 import {generarId} from '../helpers/tokens.js'
-import {emailRegistro} from '../helpers/email.js'
+import {emailRegistro,emailOlvidePassword} from '../helpers/email.js'
 
 const formularioLogin = (req,res)=>{
     res.render('auth/login',{
@@ -86,11 +87,6 @@ const registrar = async (req,res)=>{
 
 }
 
-const formularioOlvidePassword = (req,res)=>{
-    res.render('auth/olvide-password',{
-      pagina: "Recupera tu acceso a  bienes raices"
-    })
-} 
 
 // Comprobar una cuenta de EMail por el token
 const confirmar = async (req,res )=> {
@@ -125,11 +121,127 @@ const confirmar = async (req,res )=> {
 
 }
 
+const formularioOlvidePassword = (req,res)=>{
+  res.render('auth/olvide-password',{
+    pagina: "Recupera tu acceso a  bienes raices",
+    csrfToken: req.csrfToken()
+  })
+} 
+
+const resetPassword = async (req,res) => {
+    //Validar campos del formulario
+    await check("email").isEmail().withMessage("El email no es valido").run(req);
+    let resultado = validationResult(req);
+
+    //Verifica que el resultado este vacio.
+    if (!resultado.isEmpty(resultado)){
+      //Errores, renderiza el pug "registro" y lo devuelve al formulario.
+      return res.render('auth/olvide-password',{
+        pagina: "Recupera tu acceso a  bienes raices",
+        csrfToken: req.csrfToken(),
+        errores: resultado.array(),
+      });
+    }
+
+    //Buscar el usuario
+    const {email}= req.body;
+    const usuario = await Usuario.findOne({where:{email}});
+    if (!usuario){
+      return res.render('auth/olvide-password',{
+        pagina: "Recupera tu acceso a  bienes raices",
+        csrfToken: req.csrfToken(),
+        errores: [{msg:"El email no pertenece a ningún usuario"}],
+      });
+    }
+
+    //Generar un token, guardar en base de datos y enviar el email
+    usuario.token = generarId();
+    await usuario.save();
+
+    emailOlvidePassword({
+      email: usuario.email,
+      nombre: usuario.nombre,
+      token: usuario.token
+    })
+
+    //Si todo es exitoso, renderizamos el mensaje.
+    res.render('templates/mensaje',{
+      pagina: "Restablece tu password",
+      mensaje: "Hemos enviado un email con las instrucciones."
+    })
+
+}
+
+const comprobarToken = async(req,res) => {
+
+  const {token} = req.params;
+  const usuario = await Usuario.findOne({where:{token}});
+  
+  //Si no existe el usuario.
+  if (!usuario){
+      return res.render('auth/confirmar-cuenta',{
+        pagina: "Restablece tu password",
+        mensaje: "Hubo un error al validar tu información, intenta de nuevo",
+        // csrfToken: req.csrfToken(),
+        error: true,
+      });
+  }
+
+  //Mostrar formulario para modificar el password
+  res.render('auth/reset-password',{
+    pagina: "Re-establece tu password",
+   csrfToken: req.csrfToken(),
+    error: false,
+  });
+
+}
+
+const nuevoPassword = async (req,res) => {
+  //Validar el password.
+  await check("password").isLength({min:6}).withMessage("El password debe ser de al menos 6 caracteres").run(req);
+  let resultado = validationResult(req);
+
+  //Verifica que el resultado este vacio.
+  if (!resultado.isEmpty(resultado)){
+    //Errores, renderiza el pug "registro" y lo devuelve al formulario.
+    return res.render('auth/reset-password',{
+      pagina: "Restablece tu password",
+      csrfToken: req.csrfToken(),
+      errores: resultado.array()
+    });
+  }
+
+  const {token} = req.params; //parametro link
+  const {password} = req.body; // formulario.
+
+  //Identificar quien hace el cambio
+  const usuario = await Usuario.findOne({where:{token}});
+
+  console.log(usuario)
+
+  //Hashear el nuevo password.
+  const salt = await bcrypt.genSalt(10);
+  usuario.password = await bcrypt.hash(password,salt)
+  usuario.token = null;
+
+  await usuario.save();
+
+  res.render ('auth/confirmar-cuenta'),{
+    pagina: "Password Restablecido",
+    mensaje: "El password se guardo correctamente"
+  }
+
+
+}
+
 
 export {
     formularioLogin,
     formularioRegistro,
     formularioOlvidePassword,
     registrar,
-    confirmar
+    confirmar,
+    resetPassword,
+    comprobarToken,
+    nuevoPassword
 }
