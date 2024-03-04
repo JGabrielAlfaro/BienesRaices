@@ -29,4 +29,10 @@ const Usuario = db.define('usuarios',{
     }
 })
 
+//Metodo personalizado para agregar un nuevo prototype a Usuario.
+//No se puede utilizar this. con arrow function, es por eso que se utiliza function.
+Usuario.prototype.verificarPassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+}
+
 export default Usuario;
