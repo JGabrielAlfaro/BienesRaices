@@ -23,7 +23,7 @@ const emailRegistro = async (datos) => {
     const { email, nombre, token } = datos;
 
     const emailData = {
-        from: '"Bienes Raices" <support@pjs360.com>',
+        from: `"Bienes Raices" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: "Confirma tu cuenta en BienesRaices.com",
         text: "Confirma tu cuenta en BienesRaices.com",
@@ -43,7 +43,7 @@ const emailOlvidePassword = async (datos) => {
     const { email, nombre, token } = datos;
 
     const emailData = {
-        from: '"Bienes Raices" <support@pjs360.com>',
+        from: `"Bienes Raices" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: "Restablece tu contraseña en BienesRaices.com",
         text: "Restablece tu contraseña en BienesRaices.com",
