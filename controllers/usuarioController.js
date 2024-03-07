@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 
 import Usuario from "../models/Usuario.js";
 import {generarId,generarJWT} from '../helpers/tokens.js'
-import {emailRegistro,emailOlvidePassword} from '../helpers/email.js'
+import {emailRegistro,emailOlvidePassword} from '../helpers/email.js.bak'
 import { response } from "express";
 
 
