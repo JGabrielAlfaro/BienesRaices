@@ -4,12 +4,12 @@ import { config } from 'dotenv';
 config({ path: '.env' });
 
 // Determinar el entorno actual (puede ser a través de una variable de entorno NODE_ENV)
-const env = process.env.NODE_ENV || 'desarrollo';
+const env = process.env.NODE_ENV || 'DESA';
 
 // Cargar las variables de entorno según el entorno actual
-if (env === 'desarrollo') {
+if (env === 'DESA') {
     config({ path: '.env.desarrollo' });
-} else if (env === 'produccion') {
+} else if (env === 'PROD') {
     config({ path: '.env.produccion' });
 }
 
