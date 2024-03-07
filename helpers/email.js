@@ -20,7 +20,7 @@ const emailRegistro = async(datos)=> {
         html: `
             <p> Hola ${nombre}, comprueba tu cuenta en BienesRaices.com</p>
             <p>Tu cuenta ya esta lista, solo debes confirmarla en el siguiente enlace:
-              <a href="${process.env.BACKEND_URL}:${process.env.PORT ?? 3000}/auth/confirmar/${token}">Confirmar Cuenta</a>
+              <a href="${process.env.BACKEND_URL}:${process.env.SERVER_PORT ?? 3000}/auth/confirmar/${token}">Confirmar Cuenta</a>
             </p>
 
             <p> Si tu no creaste esta cuenta puedes ignorar el mensaje</p>
@@ -49,7 +49,7 @@ const emailOlvidePassword = async(datos)=> {
       html: `
           <p> Sigue el siguiente enlace para generar un password nuevo:</p>
           <p>Tu cuenta ya esta lista, solo debes confirmarla en el siguiente enlace:
-            <a href="${process.env.BACKEND_URL}:${process.env.PORT ?? 3000}/auth/olvide-password/${token}">Restablecer Password</a>
+            <a href="${process.env.BACKEND_URL}:${process.env.SERVER_PORT ?? 3000}/auth/olvide-password/${token}">Restablecer Password</a>
           </p>
 
           <p> Si tu no solicitaste el cambio de password, puedes ignorar el mensaje</p>
