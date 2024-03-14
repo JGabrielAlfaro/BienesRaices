@@ -33,6 +33,7 @@ const autenticar = async (req,res) => {
   //Comprobar si el usuario existe
   const {email,password} = req.body;
   const usuario = await Usuario.findOne({where: {email}});
+
   if(!usuario){
     //Rederizamos la misma vista
     return res.render('auth/login',{
@@ -62,13 +63,14 @@ const autenticar = async (req,res) => {
 
   //Autenticar al usuario.
   const token = generarJWT({id:usuario.id,nombre:usuario.nombre})
-  
+  console.log(token)
   //Almacenar en un cookie{}
-  return res.cookie('_token',token,{
-    httpOnly: true,
-    // secure:true, // Buena opcion si tenemos un certificado SSL.
-    //sameSite: true,
-  }).redirect('/mis-propiedades')
+
+return res.cookie('_token', token, {
+  httpOnly: true,
+  // secure: true, // Habilita esta opción si estás utilizando HTTPS
+  // sameSite: true, // Descomenta esta línea si es necesario
+}).redirect('/mis-propiedades');
 
 }
 
@@ -154,7 +156,7 @@ const confirmar = async (req,res )=> {
   
   //Para leer de una URL(nuestro variable es "token").
   const {token}=req.params;
-  console.log(token)
+  // console.log(token)
 
   //Verificar si el token es valido
   const usuario = await Usuario.findOne({where:{token}})

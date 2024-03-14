@@ -26,6 +26,14 @@ const Usuario = db.define('usuarios',{
             const salt = await bcrypt.genSalt(10);
             usuario.password = await bcrypt.hash(usuario.password,salt)
         }
+    },
+    //Al hacer un get sobre el modelo usuario no me va a traer los siguientes campos.
+    scopes: {
+        eliminarPassword: {
+            attributes: {
+                exclude: ['password', 'token', 'confirmado', 'createdAt', 'updatedAt']
+            }
+        }
     }
 })
 
