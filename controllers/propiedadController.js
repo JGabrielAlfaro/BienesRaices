@@ -3,9 +3,24 @@
 import {Precio,Categoria,Propiedad} from '../models/index.js'
 import {validationResult}  from 'express-validator' // Va ha leer el resultado de las validaciones.
 
-const admin = (req,res) => {
+const admin = async (req,res)  => {
+
+    const {id} = req.usuario;
+    const propiedades = await Propiedad.findAll({
+        where: {
+            usuarioId:id
+        },
+        include: [
+            { model: Categoria, as: 'categoria' },
+            { model: Precio, as: 'precio' },
+        ],
+        
+
+    })
+
     res.render('propiedades/admin',{
-        pagina: "Mis propiedades"
+        pagina: "Mis propiedades",
+        propiedades,
     })
 }
 
@@ -162,4 +177,4 @@ export {
     guardar,
     agregarImagen,
     almacenarImagen
-}
+} 
