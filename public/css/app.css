@@ -603,11 +603,11 @@ video {
 .justify-between {
   justify-content: space-between;
 }
-.gap-4 {
-  gap: 1rem;
-}
 .gap-2 {
   gap: 0.5rem;
+}
+.gap-4 {
+  gap: 1rem;
 }
 .space-y-3 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
@@ -943,14 +943,6 @@ video {
   }
 }
 @media (min-width: 1024px) {
-
-  .lg\:flex {
-    display: flex;
-  }
-
-  .lg\:w-1\/6 {
-    width: 16.666667%;
-  }
 
   .lg\:w-4\/6 {
     width: 66.666667%;

@@ -302,6 +302,12 @@
      
     };
 
+    const mostrarPropiedad = async (req, res) => {
+        res.render("/propiedades/mostrar",{
+
+        })
+    };
+
     export {
         admin,
         crear,
@@ -310,5 +316,6 @@
         almacenarImagen,
         editar,
         guardarCambios,
-        eliminar
+        eliminar,
+        mostrarPropiedad
     } 

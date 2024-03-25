@@ -18,7 +18,7 @@ block contenido
                                 div(class="sm:w-1/4 md:w-1/6") 
                                     img(src=`uploads/${propiedad.imagen}`,alt=`Imagen propiedad ${propiedad.titulo}` class="w-full block")
                                 div(class="sm:w-2/4 md:w-3/6 lg:w-4/6 space-y-3")
-                                    a(href="#" class="block text-2xl font-extrabold text-indigo-600 truncate")=propiedad.titulo
+                                    a(href=`/propiedad/${propiedad.id}` class="block text-2xl font-extrabold text-indigo-600 truncate")=propiedad.titulo
 
                                     p(class="text-sm text-black font-bold")=propiedad.categoria.nombre
                                     p(class="text-sm text-gray-500 font-bold flex items-center")
