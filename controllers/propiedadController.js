@@ -302,8 +302,30 @@
      
     };
 
+
+
     const mostrarPropiedad = async (req, res) => {
-        res.render("/propiedades/mostrar",{
+
+        //Extraer el ID del url
+        const {id} = req.params; 
+
+        //Validar que la propiedad exista
+         const propiedad = await Propiedad.findByPk(id,{
+            include: [
+                { model: Categoria, as: 'categoria' },
+                { model: Precio, as: 'precio' },
+            ],
+            
+
+        })
+
+        if (!propiedad) {
+            return res.redirect("/404")
+        }
+
+        res.render("propiedades/mostrar",{
+            propiedad,
+            pagina: propiedad.titulo,
 
         })
     };
